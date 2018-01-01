@@ -1,10 +1,12 @@
-#Telegram Crypto Currency Bot
+Telegram Crypto Currency Bot
 =====================
 
 [![Python3](https://img.shields.io/badge/python-3.6-blue.svg)](https://github.com/Der-Eddy/discord_bot)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/Der-Eddy/telegram_crypto_bot/master/LICENSE)
 
 A simple crypto currency bot for my telegram group (or private chats!) based on [python-telegram-bot](https://github.com/python-telegram-bot/python-telegram-bot) and the newest Python 3. The bot uses the [coinmarketcap.com API](https://coinmarketcap.com/api/) to obtain all data.
+
+![commands example](img/commands.png)
 
 Commands List
 -------------
