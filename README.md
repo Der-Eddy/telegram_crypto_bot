@@ -14,7 +14,7 @@ Command | Discription | Usage
 ----------------|--------------|-------
 `/btc` | Shows the current price of one Bitcoin in Euro | `/btc`
 `/eth` | Shows the current price of one Ether in Euro | `/eth`
-`/coin` | Shows the current price of one given cryptocurrency | `/coin ethereum`, `/coin neo`
+`/coin` | Shows the current price of one given cryptocurrency. You need to specify the `id` listed from [coinmarketcap.com](https://coinmarketcap.com/api/), which is basically the full name in lowercase and `-` as seperators | `/coin ethereum`, `/coin neo`
 `/top` | Shows the current top crypto currency based on their market cap | `/top`
 `/github` | Displays a link to the GitHub Repository | `/github`
 
