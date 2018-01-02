@@ -16,10 +16,19 @@ Command | Discription | Usage
 `/eth` | Shows the current price of one Ether in Euro | `/eth`
 `/coin` | Shows the current price of one given cryptocurrency | `/coin ethereum`, `/coin neo`
 `/top` | Shows the current top crypto currency based on their market cap | `/top`
+`/github` | Displays a link to the GitHub Repository | `/github`
+
+List to copy for [@BotFather](https://telegram.me/BotFather):
+
+    btc - Shows the current price of one Bitcoin in Euro
+    eth - Shows the current price of one Ether in Euro
+    coin - Shows the current price of one given cryptocurrency
+    top - Shows the current top crypto currency based on their market cap
+    github - Displays a link to the GitHub Repository
 
 Run
 -------------
-Either run it direct via `python3 main.py` or use systemd. An example for a systemd service can be found at `telegram.service.example`:
+Either run it directly via `python3 main.py` or use systemd. An example for a systemd service can be found at `telegram.service.example`:
 
     [Unit]
     Description=Telegram Crypto Bot
@@ -46,7 +55,7 @@ Currently there is only one setting to be made, the token for the bot account. C
 
 Don't forget to allow groups at [@BotFather](https://telegram.me/BotFather) if you want to add the bot to groups.
 
-Full list of requirements
+List of requirements
 -------------
 
     python>=3.6.0
@@ -59,7 +68,7 @@ License
 
     MIT License
 
-    Copyright (c) 2017 - 2018 Eduard Nikoleisen
+    Copyright (c) 2017 - 2018 Eduard Nikoleisen <Der-Eddy>
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal

@@ -34,7 +34,7 @@ def eth(bot, update):
     '''Shows the current price of one Ether in Euro'''
     bot.sendChatAction(chat_id=update.message.chat_id, action='typing')
     api = 'https://api.coinmarketcap.com/v1/ticker/ethereum/?convert=EUR'
-    
+
     r = requests.get(api)
     json = r.json()
     euro = float(json[0]["price_eur"])
@@ -104,6 +104,13 @@ def top(bot, update):
     update.message.reply_text(msg)
 
 
+@run_async
+def github(bot, update):
+    '''Displays a link to the GitHub Repository'''
+    link = 'https://github.com/Der-Eddy/telegram_crypto_bot'
+    update.message.reply_text(link)
+
+
 # def caps(bot, update, args):
 #     text_caps = ' '.join(args).upper()
 #     bot.send_message(chat_id=update.message.chat_id, text=text_caps)
@@ -133,6 +140,7 @@ def main():
     dp.add_handler(CommandHandler('eth', eth))
     dp.add_handler(CommandHandler('btc', btc))
     dp.add_handler(CommandHandler('top', top))
+    dp.add_handler(CommandHandler('github', github))
     dp.add_handler(CommandHandler('coin', coin, pass_args=True))
     #dp.add_handler(CommandHandler('quit', quit))
 
