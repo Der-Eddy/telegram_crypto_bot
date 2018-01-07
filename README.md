@@ -49,9 +49,11 @@ Either run it directly via `python3 main.py` or use systemd. An example for a sy
 
 Settings
 -------------
-Currently there is only one setting to be made, the token for the bot account. Copy `config.example.py` to `config.py` and add your Telegram API token from your bot.
+Copy `config.example.py` to `config.py` and add your Telegram API token from your bot. If you are in a weird country called Germany, you maybe want to change `__LOCALE_BILLION__` to `Mia.` instead. 
 
     __TOKEN__ = 'tspOGQiAoEqdEEEBzinmhJg4VuvenEzKiH39NzsZQqDDq'
+    __LOCALE_BILLION__ = 'bil.'
+    #In Germany we call a Billion a "Milliarde" instead of "Billionen" which would be a Trillion in english
 
 Don't forget to allow groups at [@BotFather](https://telegram.me/BotFather) if you want to add the bot to groups.
 

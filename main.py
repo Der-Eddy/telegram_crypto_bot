@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, run_async
-from config import __TOKEN__
+from config import __TOKEN__, __LOCALE_BILLION__
 import requests
 import sys
 import logging
@@ -69,7 +69,7 @@ def coin(bot, update, args):
     msg += f'24 hour change: {json[0]["percent_change_24h"]}%\n'
     msg += f'7 days change: {json[0]["percent_change_7d"]}%\n\n'
     msg += f'Rank: {json[0]["rank"]}\n'
-    msg += f'Market Cap: {marketCap:.3f} Mia. €\n'
+    msg += f'Market Cap: {marketCap:.3f} {__LOCALE_BILLION__} €\n'
     msg += link
     bot.send_message(chat_id=update.message.chat_id, text=msg)
 
@@ -87,7 +87,7 @@ def top(bot, update):
     for place, coin in enumerate(json):
         euro = float(coin["price_eur"])
         marketCap = float(coin["market_cap_eur"]) / 1000000000
-        msg += f'{int(place) + 1}. {coin["name"]} ({coin["symbol"]}): {marketCap:.3f} Mia. € - {euro:.6f} €\n'
+        msg += f'{int(place) + 1}. {coin["name"]} ({coin["symbol"]}): {marketCap:.3f} {__LOCALE_BILLION__} € - {euro:.6f} €\n'
     update.message.reply_text(msg)
 
 
