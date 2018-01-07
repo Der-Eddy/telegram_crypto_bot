@@ -17,6 +17,7 @@ Command | Discription | Usage
 `/coin` | Shows the current price of one given cryptocurrency. You need to specify the `id` listed from [coinmarketcap.com](https://coinmarketcap.com/api/), which is basically the full name in lowercase and `-` as seperators | `/coin ethereum`, `/coin neo`
 `/top` | Shows the current top crypto currency based on their market cap | `/top`
 `/github` | Displays a link to the GitHub Repository | `/github`
+`/help` | Sends a link to the command list | `/help`
 
 List to copy for [@BotFather](https://telegram.me/BotFather):
 
@@ -25,6 +26,7 @@ List to copy for [@BotFather](https://telegram.me/BotFather):
     coin - Shows the current price of one given cryptocurrency
     top - Shows the current top crypto currency based on their market cap
     github - Displays a link to the GitHub Repository
+    help - Sends a link to the command list
 
 Run
 -------------
@@ -49,7 +51,7 @@ Either run it directly via `python3 main.py` or use systemd. An example for a sy
 
 Settings
 -------------
-Copy `config.example.py` to `config.py` and add your Telegram API token from your bot. If you are in a weird country called Germany, you maybe want to change `__LOCALE_BILLION__` to `Mia.` instead. 
+Copy `config.example.py` to `config.py` and add your Telegram API token from your bot. If you are in a weird country called Germany, you maybe want to change `__LOCALE_BILLION__` to `Mia.` instead.
 
     __TOKEN__ = 'tspOGQiAoEqdEEEBzinmhJg4VuvenEzKiH39NzsZQqDDq'
     __LOCALE_BILLION__ = 'bil.'

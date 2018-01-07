@@ -20,13 +20,8 @@ def start(bot, update):
 
 
 def help(bot, update):
-    '''Send a message when the command /help is issued.'''
-    update.message.reply_text('Ask Eddy!')
-
-
-def echo(bot, update):
-    '''Echo the user message.'''
-    update.message.reply_text(update.message.text)
+    '''Sends a link to the command list'''
+    update.message.reply_text('A list of all commands can be found here:\nhttps://github.com/Der-Eddy/telegram_crypto_bot#commands-list')
 
 
 @run_async
