@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, run_async
 from config import __TOKEN__, __LOCALE_BILLION__
+from json import dump, load
 import requests
 import sys
 import logging
@@ -12,11 +13,29 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 logger = logging.getLogger(__name__)
 
+
+def get_currencies():
+    '''Gets a list of currency/symbol pairings and saves them for later use'''
+    api = 'https://bittrex.com/api/v1.1/public/getcurrencies'
+
+    r = requests.get(api)
+    json = r.json()['result']
+    pairings_list = []
+    for currency in json:
+        pairings_list.append([currency['Currency'], currency['CurrencyLong']])
+    pairings_list.append(['bnb', 'binance-coin']) #Adding missing pairings
+    pairings_list.append(['bch', 'bitcoin-cash'])
+    pairings_dict = dict(pairings_list)
+    with open('tmp\\pairings.json', 'w') as f:
+        dump(pairings_dict, f)
+
+
 # Define a few command handlers. These usually take the two arguments bot and
 # update. Error handlers also receive the raised TelegramError object in error.
 def start(bot, update):
     '''Send a message when the command /start is issued.'''
     update.message.reply_text('Ready!')
+    print(bot.pairings)
 
 
 def help(bot, update):
@@ -42,21 +61,25 @@ def btc(bot, update):
 def coin(bot, update, args):
     '''Shows the current price of one given cryptocurrency'''
     bot.sendChatAction(chat_id=update.message.chat_id, action='typing')
-    coin = ''.join(args).lower().replace(' ', '-')
-    if coin == 'btc' or coin == 'shitcoin':
-        coin = 'bitcoin'
-    elif coin == 'eth':
-        coin = 'ethereum'
-    elif coin == 'bnb' or coin == 'binance':
-        coin = 'binance-coin'
+    with open('tmp\\pairings.json', 'r') as f:
+        pairings = load(f)
+    coin = '-'.join(args)
+    try:
+        coin = pairings[coin.upper()].lower().replace(' ', '-')
+    except KeyError:
+        coin = coin.lower().replace(' ', '-')
     api = f'https://api.coinmarketcap.com/v1/ticker/{coin}/?convert=EUR'
     link = f'https://coinmarketcap.com/currencies/{coin}/'
 
     r = requests.get(api)
     json = r.json()
-    euro = float(json[0]["price_eur"])
-    sat = int(float(json[0]["price_btc"]) * 100000000)
-    marketCap = float(json[0]["market_cap_eur"]) / 1000000000
+    try:
+        euro = float(json[0]["price_eur"])
+        sat = int(float(json[0]["price_btc"]) * 100000000)
+        marketCap = float(json[0]["market_cap_eur"]) / 1000000000
+    except KeyError:
+        bot.send_message(chat_id=update.message.chat_id, text=f'Couldn\'t find coin {coin}!')
+        return
     msg = f'Current {json[0]["name"]} ({json[0]["symbol"]}) Price:\n'
     msg += f'{euro:.6f} €\n'
     msg += f'{sat} Sat\n\n'
@@ -142,7 +165,7 @@ def main():
     dp.add_handler(CommandHandler('github', github))
     dp.add_handler(CommandHandler('coin', coin, pass_args=True))
     dp.add_handler(CommandHandler('eth', eth, pass_args=True))
-    #dp.add_handler(CommandHandler('quit', quit))
+    #dp.add_handler(CommandHandler('test', get_currencies))
 
     # on noncommand i.e message - echo the message on Telegram
     #dp.add_handler(MessageHandler(Filters.text, echo))
@@ -153,6 +176,8 @@ def main():
     # Start the Bot
     updater.start_polling()
     print('Bot is running')
+    get_currencies()
+    print('Pairings updated!')
 
     # Run the bot until you press Ctrl-C or the process receives SIGINT,
     # SIGTERM or SIGABRT. This should be used most of the time, since

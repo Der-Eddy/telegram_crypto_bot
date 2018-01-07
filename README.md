@@ -14,7 +14,7 @@ Command | Discription | Usage
 ----------------|--------------|-------
 `/btc` | Shows the current price of one Bitcoin in Euro | `/btc`
 `/eth` | Converts a given Ethereum amount to Bitcoin | `/eth 0.5`, `/eth 2.367`
-`/coin` | Shows the current price of one given cryptocurrency. You need to specify the `id` listed from [coinmarketcap.com](https://coinmarketcap.com/api/), which is basically the full name in lowercase and `-` as seperators | `/coin ethereum`, `/coin neo`
+`/coin` | Shows the current price of one given cryptocurrency. You can either use the symbol (i.e. `ETH`, `BTC`) or the full name | `/coin ethereum`, `/coin eth`
 `/top` | Shows the current top crypto currency based on their market cap | `/top`
 `/github` | Displays a link to the GitHub Repository | `/github`
 `/help` | Sends a link to the command list | `/help`
@@ -55,7 +55,6 @@ Copy `config.example.py` to `config.py` and add your Telegram API token from you
 
     __TOKEN__ = 'tspOGQiAoEqdEEEBzinmhJg4VuvenEzKiH39NzsZQqDDq'
     __LOCALE_BILLION__ = 'bil.'
-    #In Germany we call a Billion a "Milliarde" instead of "Billionen" which would be a Trillion in english
 
 Don't forget to allow groups at [@BotFather](https://telegram.me/BotFather) if you want to add the bot to groups.
 
@@ -65,6 +64,7 @@ List of requirements
     python>=3.6.0
     python-telegram-bot
     requests
+    gspread
 
 
 License
