@@ -30,21 +30,6 @@ def echo(bot, update):
 
 
 @run_async
-def eth(bot, update):
-    '''Shows the current price of one Ether in Euro'''
-    bot.sendChatAction(chat_id=update.message.chat_id, action='typing')
-    api = 'https://api.coinmarketcap.com/v1/ticker/ethereum/?convert=EUR'
-
-    r = requests.get(api)
-    json = r.json()
-    euro = float(json[0]["price_eur"])
-    msg = 'Current Ethereum (ETH) Price:\n'
-    msg += f'{euro:.1f} € ({json[0]["percent_change_24h"]}%)\n'
-    msg += f'{json[0]["price_btc"]} ฿'
-    update.message.reply_text(msg)
-
-
-@run_async
 def btc(bot, update):
     '''Shows the current price of one Bitcoin in Euro'''
     bot.sendChatAction(chat_id=update.message.chat_id, action='typing')
@@ -92,8 +77,10 @@ def coin(bot, update, args):
 @run_async
 def top(bot, update):
     '''Shows the current top crypto currency based on their market cap'''
+    bot.sendChatAction(chat_id=update.message.chat_id, action='typing')
     limit = 15
     api = f'https://api.coinmarketcap.com/v1/ticker/?limit={limit}&convert=EUR'
+
     r = requests.get(api)
     json = r.json()
     msg = ''
@@ -101,6 +88,24 @@ def top(bot, update):
         euro = float(coin["price_eur"])
         marketCap = float(coin["market_cap_eur"]) / 1000000000
         msg += f'{int(place) + 1}. {coin["name"]} ({coin["symbol"]}): {marketCap:.3f} Mia. € - {euro:.6f} €\n'
+    update.message.reply_text(msg)
+
+
+@run_async
+def eth(bot, update, args):
+    '''Converts a given Ethereum amount to Bitcoin'''
+    bot.sendChatAction(chat_id=update.message.chat_id, action='typing')
+    api = 'https://api.coinmarketcap.com/v1/ticker/ethereum/?convert=EUR'
+    ether = float(''.join(args).replace(',', '.'))
+
+    r = requests.get(api)
+    json = r.json()
+    exchange_rate = float(json[0]['price_btc'])
+    exchange_rate_euro = float(json[0]['price_eur'])
+    btc = exchange_rate * ether
+    euro = exchange_rate_euro * ether
+    msg = f'{ether} Ether are {btc} ฿\n'
+    msg += f'Current price: {euro:.2f} €'
     update.message.reply_text(msg)
 
 
@@ -137,11 +142,11 @@ def main():
     dp = updater.dispatcher
     dp.add_handler(CommandHandler('start', start))
     dp.add_handler(CommandHandler('help', help))
-    dp.add_handler(CommandHandler('eth', eth))
     dp.add_handler(CommandHandler('btc', btc))
     dp.add_handler(CommandHandler('top', top))
     dp.add_handler(CommandHandler('github', github))
     dp.add_handler(CommandHandler('coin', coin, pass_args=True))
+    dp.add_handler(CommandHandler('eth', eth, pass_args=True))
     #dp.add_handler(CommandHandler('quit', quit))
 
     # on noncommand i.e message - echo the message on Telegram

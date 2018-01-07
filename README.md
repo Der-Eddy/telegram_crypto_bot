@@ -13,7 +13,7 @@ Commands List
 Command | Discription | Usage
 ----------------|--------------|-------
 `/btc` | Shows the current price of one Bitcoin in Euro | `/btc`
-`/eth` | Shows the current price of one Ether in Euro | `/eth`
+`/eth` | Converts a given Ethereum amount to Bitcoin | `/eth 0.5`, `/eth 2.367`
 `/coin` | Shows the current price of one given cryptocurrency. You need to specify the `id` listed from [coinmarketcap.com](https://coinmarketcap.com/api/), which is basically the full name in lowercase and `-` as seperators | `/coin ethereum`, `/coin neo`
 `/top` | Shows the current top crypto currency based on their market cap | `/top`
 `/github` | Displays a link to the GitHub Repository | `/github`
@@ -21,7 +21,7 @@ Command | Discription | Usage
 List to copy for [@BotFather](https://telegram.me/BotFather):
 
     btc - Shows the current price of one Bitcoin in Euro
-    eth - Shows the current price of one Ether in Euro
+    eth - Converts a given Ethereum amount to Bitcoin
     coin - Shows the current price of one given cryptocurrency
     top - Shows the current top crypto currency based on their market cap
     github - Displays a link to the GitHub Repository
