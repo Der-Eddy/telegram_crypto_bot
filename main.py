@@ -15,7 +15,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 logger = logging.getLogger(__name__)
 
 
-__VERSION__ = '0.2.1'
+__VERSION__ = '0.2.2'
 __USER_AGENT__ = {'User-Agent': f'{platform.system().lower()}:telegram_crypto_bot:v{__VERSION__} (by Der-Eddy)'}
 
 
@@ -85,7 +85,7 @@ def coin(bot, update, args):
         bot.send_message(chat_id=update.message.chat_id, text=f'Couldn\'t find coin {coin}!')
         return
     if json[0]["market_cap_eur"] == None:
-        marketCap = '?'
+        marketCap = 0.0
     else:
         marketCap = float(json[0]["market_cap_eur"]) / 1000000000
 
