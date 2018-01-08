@@ -55,6 +55,7 @@ Copy `config.example.py` to `config.py` and add your Telegram API token from you
 
     __TOKEN__ = 'tspOGQiAoEqdEEEBzinmhJg4VuvenEzKiH39NzsZQqDDq'
     __LOCALE_BILLION__ = 'bil.'
+    __ADMINS__ = [369613251,]
 
 Don't forget to allow groups at [@BotFather](https://telegram.me/BotFather) if you want to add the bot to groups.
 

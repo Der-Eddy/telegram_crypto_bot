@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, run_async
-from config import __TOKEN__, __LOCALE_BILLION__
+from config import __TOKEN__, __LOCALE_BILLION__, __ADMINS__
 from json import dump, load
 import requests
 import sys
@@ -134,9 +134,18 @@ def github(bot, update):
     update.message.reply_text(link)
 
 
-# def caps(bot, update, args):
-#     text_caps = ' '.join(args).upper()
-#     bot.send_message(chat_id=update.message.chat_id, text=text_caps)
+@run_async
+def debuginfo(bot, update):
+    '''Displays some user information'''
+    user = update.message.from_user
+    channel = update.message.chat
+    msg = f'User ID: {user.id}\n'
+    msg += f'Name: {user.name}\n'
+    msg += f'Language Code: {user.language_code}\n\n'
+    msg += f'Channel ID: {channel.id}\n'
+    msg += f'Channel Type: {channel.type}\n'
+    msg += f'Channel Usercount: {channel.get_members_count()}'
+    update.message.reply_text(msg)
 
 
 # def quit(bot, update):
@@ -163,6 +172,7 @@ def main():
     dp.add_handler(CommandHandler('btc', btc))
     dp.add_handler(CommandHandler('top', top))
     dp.add_handler(CommandHandler('github', github))
+    dp.add_handler(CommandHandler('debuginfo', debuginfo))
     dp.add_handler(CommandHandler('coin', coin, pass_args=True))
     dp.add_handler(CommandHandler('eth', eth, pass_args=True))
     #dp.add_handler(CommandHandler('test', get_currencies))
