@@ -3,6 +3,7 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, run_async
 from config import __TOKEN__, __LOCALE_BILLION__, __ADMINS__
 from json import dump, load
+import platform
 import requests
 import sys
 import logging
@@ -14,11 +15,15 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 logger = logging.getLogger(__name__)
 
 
+__VERSION__ = '0.2.1'
+__USER_AGENT__ = {'User-Agent': f'{platform.system().lower()}:telegram_crypto_bot:v{__VERSION__} (by Der-Eddy)'}
+
+
 def get_currencies():
     '''Gets a list of currency/symbol pairings and saves them for later use'''
     api = 'https://bittrex.com/api/v1.1/public/getcurrencies'
 
-    r = requests.get(api)
+    r = requests.get(api, headers=__USER_AGENT__)
     json = r.json()['result']
     pairings_list = []
     for currency in json:
@@ -49,7 +54,7 @@ def btc(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action='typing')
     api = 'https://api.coinmarketcap.com/v1/ticker/bitcoin/?convert=EUR'
 
-    r = requests.get(api)
+    r = requests.get(api, headers=__USER_AGENT__)
     json = r.json()
     euro = int(float(json[0]["price_eur"]))
     msg = 'Current Bitcoin (BTC) Price:\n'
@@ -71,15 +76,19 @@ def coin(bot, update, args):
     api = f'https://api.coinmarketcap.com/v1/ticker/{coin}/?convert=EUR'
     link = f'https://coinmarketcap.com/currencies/{coin}/'
 
-    r = requests.get(api)
+    r = requests.get(api, headers=__USER_AGENT__)
     json = r.json()
     try:
         euro = float(json[0]["price_eur"])
         sat = int(float(json[0]["price_btc"]) * 100000000)
-        marketCap = float(json[0]["market_cap_eur"]) / 1000000000
     except KeyError:
         bot.send_message(chat_id=update.message.chat_id, text=f'Couldn\'t find coin {coin}!')
         return
+    if json[0]["market_cap_eur"] == None:
+        marketCap = '?'
+    else:
+        marketCap = float(json[0]["market_cap_eur"]) / 1000000000
+
     msg = f'Current {json[0]["name"]} ({json[0]["symbol"]}) Price:\n'
     msg += f'{euro:.6f} €\n'
     msg += f'{sat} Sat\n\n'
@@ -99,7 +108,7 @@ def top(bot, update):
     limit = 15
     api = f'https://api.coinmarketcap.com/v1/ticker/?limit={limit}&convert=EUR'
 
-    r = requests.get(api)
+    r = requests.get(api, headers=__USER_AGENT__)
     json = r.json()
     msg = ''
     for place, coin in enumerate(json):
@@ -116,7 +125,7 @@ def eth(bot, update, args):
     api = 'https://api.coinmarketcap.com/v1/ticker/ethereum/?convert=EUR'
     ether = float(''.join(args).replace(',', '.'))
 
-    r = requests.get(api)
+    r = requests.get(api, headers=__USER_AGENT__)
     json = r.json()
     exchange_rate = float(json[0]['price_btc'])
     exchange_rate_euro = float(json[0]['price_eur'])
