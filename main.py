@@ -127,7 +127,10 @@ def sat(bot, update, args):
     '''Converts a given Satoshi or BTC amount to Ether'''
     bot.sendChatAction(chat_id=update.message.chat_id, action='typing')
     api = 'https://api.coinmarketcap.com/v1/ticker/bitcoin/?convert='
-    sat = float(''.join(args).replace(',', '.'))
+    try:
+        sat = float(''.join(args).replace(',', '.'))
+    except ValueError:
+        sat = 100000000.0
     btc = sat / 100000000
 
     eth = requests.get(api + 'ETH', headers=__USER_AGENT__)
