@@ -15,7 +15,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 logger = logging.getLogger(__name__)
 
 
-__VERSION__ = '0.2.2'
+__VERSION__ = '0.2.3'
 __USER_AGENT__ = {'User-Agent': f'{platform.system().lower()}:telegram_crypto_bot:v{__VERSION__} (by Der-Eddy)'}
 
 
@@ -46,20 +46,6 @@ def start(bot, update):
 def help(bot, update):
     '''Sends a link to the command list'''
     update.message.reply_text('A list of all commands can be found here:\nhttps://github.com/Der-Eddy/telegram_crypto_bot#commands-list')
-
-
-@run_async
-def btc(bot, update):
-    '''Shows the current price of one Bitcoin in Euro'''
-    bot.sendChatAction(chat_id=update.message.chat_id, action='typing')
-    api = 'https://api.coinmarketcap.com/v1/ticker/bitcoin/?convert=EUR'
-
-    r = requests.get(api, headers=__USER_AGENT__)
-    json = r.json()
-    euro = int(float(json[0]["price_eur"]))
-    msg = 'Current Bitcoin (BTC) Price:\n'
-    msg += f'{euro} € ({json[0]["percent_change_24h"]}%)'
-    update.message.reply_text(msg)
 
 
 @run_async
@@ -137,6 +123,25 @@ def eth(bot, update, args):
 
 
 @run_async
+def sat(bot, update, args):
+    '''Converts a given Satoshi or BTC amount to Ether'''
+    bot.sendChatAction(chat_id=update.message.chat_id, action='typing')
+    api = 'https://api.coinmarketcap.com/v1/ticker/bitcoin/?convert='
+    sat = float(''.join(args).replace(',', '.'))
+    btc = sat / 100000000
+
+    eth = requests.get(api + 'ETH', headers=__USER_AGENT__)
+    exchange_rate = float(eth.json()[0]['price_eth'])
+    eur = requests.get(api + 'EUR', headers=__USER_AGENT__)
+    exchange_rate_euro = float(eur.json()[0]['price_eur'])
+    eth = exchange_rate * btc
+    euro = exchange_rate_euro * btc
+    msg = f'{sat:.0f} Satoshi ({btc} ฿) are \n{eth:.8f} ETH\n'
+    msg += f'Current price: {euro:.2f} €'
+    update.message.reply_text(msg)
+
+
+@run_async
 def github(bot, update):
     '''Displays a link to the GitHub Repository'''
     link = 'https://github.com/Der-Eddy/telegram_crypto_bot'
@@ -178,12 +183,13 @@ def main():
     dp = updater.dispatcher
     dp.add_handler(CommandHandler('start', start))
     dp.add_handler(CommandHandler('help', help))
-    dp.add_handler(CommandHandler('btc', btc))
     dp.add_handler(CommandHandler('top', top))
     dp.add_handler(CommandHandler('github', github))
     dp.add_handler(CommandHandler('debuginfo', debuginfo))
     dp.add_handler(CommandHandler('coin', coin, pass_args=True))
     dp.add_handler(CommandHandler('eth', eth, pass_args=True))
+    dp.add_handler(CommandHandler('sat', sat, pass_args=True))
+    dp.add_handler(CommandHandler('btc', sat, pass_args=True))
     #dp.add_handler(CommandHandler('test', get_currencies))
 
     # on noncommand i.e message - echo the message on Telegram

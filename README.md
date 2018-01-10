@@ -12,7 +12,7 @@ Commands List
 -------------
 Command | Discription | Usage
 ----------------|--------------|-------
-`/btc` | Shows the current price of one Bitcoin in Euro | `/btc`
+`/btc`, `/sat` | Converts a given Satoshi or BTC amount to Ether | `/sat 10000`
 `/eth` | Converts a given Ethereum amount to Bitcoin | `/eth 0.5`, `/eth 2.367`
 `/coin` | Shows the current price of one given cryptocurrency. You can either use the symbol (i.e. `ETH`, `BTC`) or the full name | `/coin ethereum`, `/coin eth`
 `/top` | Shows the current top crypto currency based on their market cap | `/top`
@@ -21,7 +21,7 @@ Command | Discription | Usage
 
 List to copy for [@BotFather](https://telegram.me/BotFather):
 
-    btc - Shows the current price of one Bitcoin in Euro
+    sat - Converts a given Satoshi or BTC amount to Ether
     eth - Converts a given Ethereum amount to Bitcoin
     coin - Shows the current price of one given cryptocurrency
     top - Shows the current top crypto currency based on their market cap
