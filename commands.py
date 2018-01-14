@@ -1,9 +1,8 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, run_async
+from config import __LOCALE_BILLION__, __ADMINS__
 from json import dump, load
-import platform
 import requests
 import sys
-import logging
 
 class Commands():
     def __init__(self, user_agent):
