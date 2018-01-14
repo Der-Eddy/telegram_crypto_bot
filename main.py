@@ -20,7 +20,7 @@ __VERSION__ = '1.0.0'
 __USER_AGENT__ = {'User-Agent': f'{platform.system().lower()}:telegram_crypto_bot:v{__VERSION__} (by Der-Eddy)'}
 
 
-def get_currencies():
+def get_currencies(bot, job):
     '''Gets a list of currency/symbol pairings and saves them for later use'''
     api = 'https://bittrex.com/api/v1.1/public/getcurrencies'
 
@@ -34,6 +34,8 @@ def get_currencies():
     pairings_dict = dict(pairings_list)
     with open('tmp\\pairings.json', 'w') as f:
         dump(pairings_dict, f)
+
+    print('Pairings updated!')
 
 
 def error(bot, update, error):
@@ -66,11 +68,13 @@ if __name__ == '__main__':
     # log all errors
     dp.add_error_handler(error)
 
+    # Jobs
+    j = updater.job_queue
+    j.run_repeating(get_currencies, interval=60*60*12, first=0)
+
     # Start the Bot
     updater.start_polling()
     print('Bot is running')
-    get_currencies()
-    print('Pairings updated!')
 
     # Run the bot until you press Ctrl-C or the process receives SIGINT,
     # SIGTERM or SIGABRT. This should be used most of the time, since
