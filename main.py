@@ -42,9 +42,9 @@ def get_exchange_prices(bot, job):
     api = 'https://api.coinmarketcap.com/v1/ticker/{currency}/?convert={convert}'
 
     eth = requests.get(api.format(currency='bitcoin', convert='ETH'), headers=__USER_AGENT__)
-    time.sleep(100)
+    time.sleep(1000)
     eur = requests.get(api.format(currency='bitcoin', convert='EUR'), headers=__USER_AGENT__)
-    time.sleep(100)
+    time.sleep(1000)
     eth_eur = requests.get(api.format(currency='ethereum', convert='EUR'), headers=__USER_AGENT__)
     exchange_btc_eth = float(eth.json()[0]['price_eth'])
     exchange_btc_eur = float(eur.json()[0]['price_eur'])
@@ -95,8 +95,8 @@ if __name__ == '__main__':
 
     # Jobs
     j = updater.job_queue
-    #j.run_repeating(get_currencies, interval=60*60*12, first=10) #Every 12 hours
-    j.run_repeating(get_exchange_prices, interval=60*5, first=0) #Every 5 minutes
+    j.run_repeating(get_currencies, interval=60*60*12, first=10) #Every 12 hours
+    j.run_repeating(get_exchange_prices, interval=60*2, first=0) #Every 2 minutes
 
     # Start the Bot
     updater.start_polling()
