@@ -4,6 +4,7 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, run_a
 from config import __TOKEN__, __LOCALE_BILLION__, __ADMINS__
 from json import dump, load
 from commands import Commands
+import time
 import platform
 import requests
 import logging
@@ -15,7 +16,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 logger = logging.getLogger(__name__)
 
 
-__VERSION__ = '1.0.1'
+__VERSION__ = '1.0.2'
 __USER_AGENT__ = {'User-Agent': f'{platform.system().lower()}:telegram_crypto_bot:v{__VERSION__} (by Der-Eddy)'}
 
 
@@ -35,6 +36,31 @@ def get_currencies(bot, job):
         dump(pairings_dict, f)
 
     print('Pairings updated!')
+
+def get_exchange_prices(bot, job):
+    '''Gets the current bitcoin/ethereum exchange price and saves it for later use'''
+    api = 'https://api.coinmarketcap.com/v1/ticker/{currency}/?convert={convert}'
+
+    eth = requests.get(api.format(currency='bitcoin', convert='ETH'), headers=__USER_AGENT__)
+    time.sleep(100)
+    eur = requests.get(api.format(currency='bitcoin', convert='EUR'), headers=__USER_AGENT__)
+    time.sleep(100)
+    eth_eur = requests.get(api.format(currency='ethereum', convert='EUR'), headers=__USER_AGENT__)
+    exchange_btc_eth = float(eth.json()[0]['price_eth'])
+    exchange_btc_eur = float(eur.json()[0]['price_eur'])
+    exchange_eth_eur = float(eth_eur.json()[0]['price_eur'])
+    exchange_eth_btc = float(eth_eur.json()[0]['price_btc'])
+    exchange_rate = []
+    exchange_rate.append(['exchange_btc_eth', exchange_btc_eth])
+    exchange_rate.append(['exchange_btc_eur', exchange_btc_eur])
+    exchange_rate.append(['exchange_eth_eur', exchange_eth_eur])
+    exchange_rate.append(['exchange_eth_btc', exchange_eth_btc])
+    exchange_rate.append(['timestamp', time.time()])
+
+    with open('tmp\\exchange_price_cache.json', 'w') as f:
+        dump(dict(exchange_rate), f)
+
+    print('Exchange rate updated!')
 
 
 def error(bot, update, error):
@@ -69,7 +95,8 @@ if __name__ == '__main__':
 
     # Jobs
     j = updater.job_queue
-    j.run_repeating(get_currencies, interval=60*60*12, first=0)
+    #j.run_repeating(get_currencies, interval=60*60*12, first=10) #Every 12 hours
+    j.run_repeating(get_exchange_prices, interval=60*5, first=0) #Every 5 minutes
 
     # Start the Bot
     updater.start_polling()

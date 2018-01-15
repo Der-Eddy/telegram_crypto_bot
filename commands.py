@@ -27,6 +27,8 @@ class Commands():
         bot.sendChatAction(chat_id=update.message.chat_id, action='typing')
         with open('tmp\\pairings.json', 'r') as f:
             pairings = load(f)
+        with open('tmp\\exchange_price_cache.json', 'r') as f:
+            exchange_rate = load(f)
         coin = '-'.join(args)
         try:
             coin = pairings[coin.upper()].lower().replace(' ', '-')
@@ -47,10 +49,12 @@ class Commands():
             marketCap = 0.0
         else:
             marketCap = float(json[0]["market_cap_eur"]) / 1000000000
+        eth = (sat / 100000000) * exchange_rate['exchange_btc_eth']
 
         msg = f'Current {json[0]["name"]} ({json[0]["symbol"]}) Price:\n'
         msg += f'{euro:.6f} €\n'
-        msg += f'{sat} Sat\n\n'
+        msg += f'{sat} Sat\n'
+        msg += f'{eth:.8f} ETH\n\n'
         msg += f'1 hour change: {json[0]["percent_change_1h"]}%\n'
         msg += f'24 hour change: {json[0]["percent_change_24h"]}%\n'
         msg += f'7 days change: {json[0]["percent_change_7d"]}%\n\n'
@@ -99,19 +103,16 @@ class Commands():
     def sat(self, bot, update, args):
         '''Converts a given Satoshi or BTC amount to Ether'''
         bot.sendChatAction(chat_id=update.message.chat_id, action='typing')
-        api = 'https://api.coinmarketcap.com/v1/ticker/bitcoin/?convert='
+        with open('tmp\\exchange_price_cache.json', 'r') as f:
+            exchange_rate = load(f)
         try:
             sat = float(''.join(args).replace(',', '.'))
         except ValueError:
             sat = 100000000.0
         btc = sat / 100000000
 
-        eth = requests.get(api + 'ETH', headers=self.user_agent)
-        exchange_rate = float(eth.json()[0]['price_eth'])
-        eur = requests.get(api + 'EUR', headers=self.user_agent)
-        exchange_rate_euro = float(eur.json()[0]['price_eur'])
-        eth = exchange_rate * btc
-        euro = exchange_rate_euro * btc
+        eth = exchange_rate['exchange_btc_eth'] * btc
+        euro = exchange_rate['exchange_btc_eur'] * btc
         msg = f'{sat:.0f} Satoshi ({btc} ฿) are \n{eth:.8f} ETH\n'
         msg += f'Current price: {euro:.2f} €'
         update.message.reply_text(msg)
