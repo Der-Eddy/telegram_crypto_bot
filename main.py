@@ -16,7 +16,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 logger = logging.getLogger(__name__)
 
 
-__VERSION__ = '1.0.2'
+__VERSION__ = '1.0.3'
 __USER_AGENT__ = {'User-Agent': f'{platform.system().lower()}:telegram_crypto_bot:v{__VERSION__} (by Der-Eddy)'}
 
 
@@ -31,6 +31,7 @@ def get_currencies(bot, job):
         pairings_list.append([currency['Currency'], currency['CurrencyLong']])
     pairings_list.append(['bnb', 'binance-coin']) #Adding missing pairings
     pairings_list.append(['bch', 'bitcoin-cash'])
+    pairings_list.append(['nano', 'raiblocks'])
     pairings_dict = dict(pairings_list)
     with open('tmp\\pairings.json', 'w') as f:
         dump(pairings_dict, f)
