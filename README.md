@@ -67,6 +67,7 @@ List of requirements
     python>=3.6.0
     python-telegram-bot
     requests
+    tzlocal
 
 
 Donations

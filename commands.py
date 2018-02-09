@@ -1,6 +1,8 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, run_async
 from config import __LOCALE_BILLION__, __ADMINS__
 from json import dump, load
+from datetime import datetime
+import tzlocal
 import random
 import requests
 import sys
@@ -51,6 +53,10 @@ class Commands():
         else:
             marketCap = float(json[0]["market_cap_eur"]) / 1000000000
         eth = (sat / 100000000) * exchange_rate['exchange_btc_eth']
+        volume = float(json[0]["24h_volume_eur"]) / 1000000
+        timestamp = int(json[0]["last_updated"])
+        local_timezone = tzlocal.get_localzone()
+        last_update = datetime.fromtimestamp(timestamp, local_timezone)
 
         msg = f'Current {json[0]["name"]} ({json[0]["symbol"]}) Price:\n'
         msg += f'{euro:.6f} €\n'
@@ -61,6 +67,8 @@ class Commands():
         msg += f'7 days change: {json[0]["percent_change_7d"]}%\n\n'
         msg += f'Rank: {json[0]["rank"]}\n'
         msg += f'Market Cap: {marketCap:.3f} {__LOCALE_BILLION__} €\n'
+        msg += f'Volume (24 hours): {volume:.3f} Mio. €\n'
+        msg += f'Last Update: {last_update.strftime("%H:%M:%S %x")}\n'
         msg += link
         bot.send_message(chat_id=update.message.chat_id, text=msg)
 
@@ -95,7 +103,7 @@ class Commands():
         exchange_rate_euro = float(json[0]['price_eur'])
         btc = exchange_rate * ether
         euro = exchange_rate_euro * ether
-        msg = f'{ether} Ether are {btc} ฿\n'
+        msg = f'{ether} Ether are {btc:.8f} ฿\n'
         msg += f'Current price: {euro:.2f} €'
         update.message.reply_text(msg)
 
@@ -114,7 +122,7 @@ class Commands():
 
         eth = exchange_rate['exchange_btc_eth'] * btc
         euro = exchange_rate['exchange_btc_eur'] * btc
-        msg = f'{sat:.0f} Satoshi ({btc} ฿) are \n{eth:.8f} ETH\n'
+        msg = f'{sat:.0f} Satoshi ({btc:.8f} ฿) are \n{eth:.8f} ETH\n'
         msg += f'Current price: {euro:.2f} €'
         update.message.reply_text(msg)
 
