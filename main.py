@@ -16,7 +16,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 logger = logging.getLogger(__name__)
 
 
-__VERSION__ = '1.0.3'
+__VERSION__ = '1.1.0'
 __USER_AGENT__ = {'User-Agent': f'{platform.system().lower()}:telegram_crypto_bot:v{__VERSION__} (by Der-Eddy)'}
 
 
@@ -86,6 +86,7 @@ if __name__ == '__main__':
     dp.add_handler(CommandHandler('eth', commands.eth, pass_args=True))
     dp.add_handler(CommandHandler('sat', commands.sat, pass_args=True))
     dp.add_handler(CommandHandler('btc', commands.sat, pass_args=True))
+    dp.add_handler(CommandHandler('coinflip', commands.coinflip, pass_args=True))
     #dp.add_handler(CommandHandler('test', get_currencies))
 
     # on noncommand i.e message - echo the message on Telegram

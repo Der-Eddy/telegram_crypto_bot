@@ -1,6 +1,7 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, run_async
 from config import __LOCALE_BILLION__, __ADMINS__
 from json import dump, load
+import random
 import requests
 import sys
 
@@ -123,6 +124,15 @@ class Commands():
         '''Displays a link to the GitHub Repository'''
         link = 'https://github.com/Der-Eddy/telegram_crypto_bot'
         update.message.reply_text(link)
+
+    @run_async
+    def coinflip(self, bot, update, args):
+        '''Flips a coin'''
+        if len(args) == 2:
+            coin = [args[0], args[1]]
+        else:
+            coin = ['Head', 'Tails']
+        update.message.reply_text(f'🔄 {random.choice(coin)}')
 
 
     @run_async

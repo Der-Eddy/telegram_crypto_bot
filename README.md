@@ -17,6 +17,7 @@ Command | Discription | Usage
 `/coin` | Shows the current price of one given cryptocurrency. You can either use the symbol (i.e. `ETH`, `BTC`) or the full name | `/coin ethereum`, `/coin eth`
 `/top` | Shows the current top crypto currency based on their market cap | `/top`
 `/github` | Displays a link to the GitHub Repository | `/github`
+`/coinflip` | Flips a coin | `/coinflip`, `/coinflip Kopf Zahl`
 `/help` | Sends a link to the command list | `/help`
 
 List to copy for [@BotFather](https://telegram.me/BotFather):
@@ -26,6 +27,7 @@ List to copy for [@BotFather](https://telegram.me/BotFather):
     coin - Shows the current price of one given cryptocurrency
     top - Shows the current top crypto currency based on their market cap
     github - Displays a link to the GitHub Repository
+    coinflip - Flips a coin
     help - Sends a link to the command list
 
 Run
