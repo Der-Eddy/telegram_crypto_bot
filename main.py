@@ -16,23 +16,22 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 logger = logging.getLogger(__name__)
 
 
-__VERSION__ = '1.1.1'
+__VERSION__ = '1.1.2'
 __USER_AGENT__ = {'User-Agent': f'{platform.system().lower()}:telegram_crypto_bot:v{__VERSION__} (by Der-Eddy)'}
 
 
 def get_currencies(bot, job):
     '''Gets a list of currency/symbol pairings and saves them for later use'''
-    api = 'https://bittrex.com/api/v1.1/public/getcurrencies'
+    cmc_api = 'https://api.coinmarketcap.com/v1/ticker/?limit=1000'
 
-    r = requests.get(api, headers=__USER_AGENT__)
-    json = r.json()['result']
-    pairings_list = []
+    r = requests.get(cmc_api, headers=__USER_AGENT__)
+    json = r.json()
+    cmc_pairings = []
     for currency in json:
-        pairings_list.append([currency['Currency'], currency['CurrencyLong']])
-    pairings_list.append(['bnb', 'binance-coin']) #Adding missing pairings
-    pairings_list.append(['bch', 'bitcoin-cash'])
-    pairings_list.append(['nano', 'raiblocks'])
-    pairings_dict = dict(pairings_list)
+        cmc_pairings.append([currency['symbol'], currency['id']])
+
+    cmc_pairings.append(['nano', 'raiblocks'])
+    pairings_dict = dict(cmc_pairings)
     with open('tmp\\pairings.json', 'w') as f:
         dump(pairings_dict, f)
 
@@ -97,7 +96,7 @@ if __name__ == '__main__':
 
     # Jobs
     j = updater.job_queue
-    j.run_repeating(get_currencies, interval=60*60*12, first=10) #Every 12 hours
+    j.run_repeating(get_currencies, interval=60*60*12, first=0) #Every 12 hours
     j.run_repeating(get_exchange_prices, interval=60*2, first=0) #Every 2 minutes
 
     # Start the Bot
