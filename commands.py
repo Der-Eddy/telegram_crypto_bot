@@ -28,9 +28,9 @@ class Commands():
     def coin(self, bot, update, args):
         '''Shows the current price of one given cryptocurrency'''
         bot.sendChatAction(chat_id=update.message.chat_id, action='typing')
-        with open('tmp\\pairings.json', 'r') as f:
+        with open('tmp/pairings.json', 'r') as f:
             pairings = load(f)
-        with open('tmp\\exchange_price_cache.json', 'r') as f:
+        with open('tmp/exchange_price_cache.json', 'r') as f:
             exchange_rate = load(f)
         coin = '-'.join(args)
         try:
@@ -112,7 +112,7 @@ class Commands():
     def sat(self, bot, update, args):
         '''Converts a given Satoshi or BTC amount to Ether'''
         bot.sendChatAction(chat_id=update.message.chat_id, action='typing')
-        with open('tmp\\exchange_price_cache.json', 'r') as f:
+        with open('tmp/exchange_price_cache.json', 'r') as f:
             exchange_rate = load(f)
         try:
             sat = float(''.join(args).replace(',', '.'))
